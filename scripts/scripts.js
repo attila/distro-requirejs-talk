@@ -1,0 +1,1 @@
+bespoke.from("article",{keys:!0,touch:!0,bullets:"li, .bullet",scale:!0,progress:!0,state:!0});
