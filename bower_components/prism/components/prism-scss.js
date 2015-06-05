@@ -1,13 +1,13 @@
 Prism.languages.scss = Prism.languages.extend('css', {
 	'comment': {
-		pattern: /(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*?(\r?\n|$))/,
+		pattern: /(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*?(\r?\n|$))/g,
 		lookbehind: true
 	},
 	// aturle is just the @***, not the entire rule (to highlight var & stuffs)
 	// + add ability to highlight number & unit for media queries
-	'atrule': /@[\w-]+(?=\s+(\(|\{|;))/i,
+	'atrule': /@[\w-]+(?=\s+(\(|\{|;))/gi,
 	// url, compassified
-	'url': /([-a-z]+-)*url(?=\()/i,
+	'url': /([-a-z]+-)*url(?=\()/gi,
 	// CSS selector regex is not appropriate for Sass
 	// since there can be lot more things (var, @ directive, nesting..)
 	// a selector must start at the end of a property or after a brace (end of other rules or nesting)
@@ -15,7 +15,7 @@ Prism.languages.scss = Prism.languages.extend('css', {
 	// the end of a selector is found when there is no rules in it ( {} or {\s}) or if there is a property (because an interpolated var
 	// can "pass" as a selector- e.g: proper#{$erty})
 	// this one was ard to do, so please be careful if you edit this one :)
-	'selector': /([^@;\{\}\(\)]?([^@;\{\}\(\)]|&|#\{\$[-_\w]+\})+)(?=\s*\{(\}|\s|[^\}]+(:|\{)[^\}]+))/m
+	'selector': /([^@;\{\}\(\)]?([^@;\{\}\(\)]|&amp;|\#\{\$[-_\w]+\})+)(?=\s*\{(\}|\s|[^\}]+(:|\{)[^\}]+))/gm
 });
 
 Prism.languages.insertBefore('scss', 'atrule', {
@@ -27,10 +27,10 @@ Prism.languages.insertBefore('scss', 'property', {
 	'variable': /((\$[-_\w]+)|(#\{\$[-_\w]+\}))/i
 });
 
-Prism.languages.insertBefore('scss', 'function', {
+Prism.languages.insertBefore('scss', 'ignore', {
 	'placeholder': /%[-_\w]+/i,
-	'statement': /\B!(default|optional)\b/i,
-	'boolean': /\b(true|false)\b/,
-	'null': /\b(null)\b/,
-	'operator': /\s+([-+]{1,2}|={1,2}|!=|\|?\||\?|\*|\/|%)\s+/
+	'statement': /\B!(default|optional)\b/gi,
+	'boolean': /\b(true|false)\b/g,
+	'null': /\b(null)\b/g,
+	'operator': /\s+([-+]{1,2}|={1,2}|!=|\|?\||\?|\*|\/|\%)\s+/g
 });

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": [
       "prism.js",
-      "themes/prism.css"
+      "prism.css"
   ],
   "homepage": "http://prismjs.com",
   "authors": "Lea Verou",
@@ -21,6 +21,7 @@
     "download.js",
     "prefixfree.min.js",
     "utopia.js",
-    "code.js"
+    "code.js",
+    "components.js"
   ]
 }

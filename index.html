@@ -9,133 +9,526 @@
   <body>
     <article>
       <section data-bespoke-state="main">
-        <h1>Automate all teh things with task runners</h1>
+        <h1>Using Require.js in Dennis Distro</h1>
         <hr>
         <hr>
         <hr>
         <hr>
         <h3>Attila Beregszaszi</h3>
         <hr>
-        <h4>08/04/2015</h4>
+        <h4>20/05/2014</h4>
       </section>
       <section>
-        <h1>Integration</h1>
+        <h1>What is Require.js?</h1>
+        <ul>
+          <li></li>
+          <li>
+            <h3>It is a JavaScript module loader</h3>
+          </li>
+          <li>
+            <h3>... and that's it.</h3>
+          </li>
+        </ul>
       </section>
       <section>
-        <h2>1. Basic integration</h2>
-        <hr>
-        <hr>
-        <h3>add <code>package.json</code> and <code>Gruntfile.js</code> to your projects</h3>
-      </section>
-      <section>
-        <pre><code class="language-markup">$ tree my_basic_project
-my_basic_project/
-├── .gitignore
-├── Gruntfile.js
-├── dist
-│   ├── build.js
-│   └── build.min.js
-├── package.json
-├── src
-│   ├── src.js
-│   ├── src-2.js
-└── tests
-    └── my_test_spec.js
-    </code></pre>
-      </section>
-      <section>
-        <h3>What is in .gitignore?</h3>
+        <h2>But what is a module loader?</h2>
+        <h3>... and why do we need one anyways?</h3>
         <hr>
         <hr>
         <ul>
           <li></li>
           <li>
-            <h4>Only <code>node_modules</code></h4>
-          </li>
-          <li>
-            <h4><code>package.json</code> and <code>Gruntfile.js</code> remain versioned together with <code>dist/</code></h4>
+            <h2>Let's see an example</h2>
           </li>
         </ul>
       </section>
       <section>
-        <h3>DEMO</h3>
+        <h2>Vanilla Drupal Starts Like This:</h2>
+        <h3>JavaScript files are included as HTML script tags</h3>
         <hr>
-        <hr>
-        <hr>
-        <p><img src="images/demo-1.gif"></p>
+        <pre><code class="language-markup">&lt;script src="core/jquery.js"&gt;&lt;/script&gt;
+&lt;script src="core/drupal.js"&gt;&lt;/script&gt;
+&lt;script src="libraries/enquire.js"&gt;&lt;/script&gt;
+&lt;script src="custom/main.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;</code></pre>
       </section>
       <section>
-        <h3>One caveat</h3>
-        <hr>
-        <hr>
-        <h4>Make sure you run the build before every commit</h4>
-        <hr>
-        <h5>or at least every commit in a branch meant for production</h5>
-      </section>
-      <section>
-        <h2>2. Integration with build systems</h2>
-        <hr>
-        <hr>
+        <h1>This Is Fine...</h1>
         <ul>
+          <li></li>
           <li>
-            <h3>add <code>package.json</code> and <code>Gruntfile.js</code> to your projects</h3>
+            <hr>
+            <h4>If you don't have many dependencies</h4>
+            <li>
+              <h3 class="red">We really have a lot</h3>
+            </li>
           </li>
           <li>
             <hr>
-            <h3>ignore build output</h3>
+            <h4>If you don't care about page load performance</h4>
+            <li>
+              <h3 class="red">We really should</h3>
+            </li>
+          </li>
+          <li>
+            <hr>
+            <h4>If you don't like decoupled code</h4>
+            <li>
+              <h3 class="red">We really <span class="shake shake-rotate shake-constant hover-stop">really</span> should</h3>
+            </li>
           </li>
         </ul>
       </section>
       <section>
-        <pre><code class="language-markup">drupal_site/
-├── .gitignore
-├── Gruntfile.js
-├── package.json
-├── modules
-├── themes
-│   ├── base
-│   │   ├── js
-│   │   ├── sass
-│   │   └── templates
-│   ├── site
-│   │   ├── js
-│   │   ├── sass
-│   │   └── templates
-├── .gitignore
-└── site.make
+        <h1>Dependencies?</h1>
+        <hr>
+        <hr>
+        <h2>If you load via script tags, watch out for the ordering</h2>
+        <hr>
+        <h3>Play with weights in <code>drupal_add_js()</code></h3>
+        <ul>
+          <li></li>
+          <li>
+            <hr>
+            <h3 class="red">Not good enough</h3>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>Performance?</h1>
+        <hr>
+        <hr>
+        <h2>Script tags block page rendering</h2>
+        <hr>
+        <h3>Even putting scripts to the bottom <br> doesn't help <em>that</em> much with performance</h3>
+        <ul>
+          <li></li>
+          <li>
+            <h3 class="red">Not good enough</h3>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>Decoupling?</h1>
+        <h3>Modular Javascript is...</h3>
+        <ul>
+          <li></li>
+          <li>
+            <h3 class="green">Scalable</h3>
+            <ul>
+              <li>
+                <h4>Isolated pieces of code designed to work independently</h4>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h3 class="green">Team-ready</h3>
+            <ul>
+              <li>
+                <h4>Members of a team can be assigned a set of modules to develop and can work in parallel with minimal conflicts</h4>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h3 class="green">Localised</h3>
+            <ul>
+              <li>
+                <h4>Modules automatically create a new <em>namespace</em> for the whole module, good for performance</h4>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h2>This Is Better:</h2>
+        <h3>Only Require.js is added as a script tag</h3>
+        <hr>
+        <pre><code class="language-markup">&lt;head&gt;
+&lt;script src="require.js" data-main="main"&gt;&lt;/script&gt;
+&lt;/head&gt;</code></pre>
+        <hr>
+        <h3><code>data-main</code> - Tells Require.js to load <code>main.js</code> first</h3>
+      </section>
+      <section>
+        <h1>Huh?</h1>
+        <hr>
+        <h3><code>main.js</code> is being loaded, but not my other JS files?</h3>
+        <h3><strong>RequireJS is the worst</strong></h3>
+      </section>
+      <section>
+        <h1>Everything Is Going To Be Okay!</h1>
+        <hr>
+        <h3>You haven't told RequireJS that <code>main.js</code> depends on <i>jQuery</i>, <i>Drupal</i> and <i>Enquire</i></h3>
+      </section>
+      <section>
+        <h2>How Do I Tell Require.js About My File Dependencies?</h2>
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h3>By writing <code>main.js</code> in a format that Require.js understands</h3>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>What Format?</h1>
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h2><a href="https://github.com/amdjs/amdjs-api/wiki/AMD" target="_blank">AMD</a></h2>
+            <h3>Asynchronous Module Definition</h3>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>main.js AMD Example</h1>
+        <pre><code class="language-javascript">// main.js
+// Depends on jQuery, Drupal and Enquire
+define(['jquery', 'drupal', 'enquire'], function($, Drupal, enquire) {
+  /* This function gets called after
+    jquery.js, drupal.js and enquire.js
+    are loaded and ready
+  */
+});
 </code></pre>
       </section>
       <section>
-        <h3>What's ignored?</h3>
+        <h1>Awesome, It Works!</h1>
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h2>Now You Can Build Modules That Depend On Other Modules</h2>
+            <hr>
+          </li>
+          <li>
+            <h2>Single Entry Point For Your JavaScript</h2>
+          </li>
+          <li>
+            <h2>&gt;</h2>
+          </li>
+        </ul>
+      </section>
+      <section data-bespoke-state="inverted">
+        <h1>Mind. Blown.</h1>
+        <hr><img src="images/mind-blown.gif">
+      </section>
+      <section>
+        <h2>AMD?</h2>
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h3>Module Format Used By RequireJS</h3>
+          </li>
+          <li>
+            <h3>Exposes Two Global Methods:</h3>
+            <hr>
+            <h3><a href="https://github.com/amdjs/amdjs-api/wiki/AMD#define-function-" target="_blank">define()</a></h3>
+            <h4>to wrap logic that you would like to re-use somewhere else in your application</h4>
+            <hr>
+            <h3><a href="https://github.com/amdjs/amdjs-api/wiki/require" target="_blank">require()</a></h3>
+            <h4>when you just want a dependency to be loaded onto the page</h4>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>Please Tell Me More About AMD</h1>
+        <hr>
         <hr>
         <hr>
         <ul>
           <li></li>
           <li>
-            <h4><code>node_modules</code></h4>
-          </li>
-          <li>
-            <h4><code>sass-extensions</code></h4>
-          </li>
-          <li>
-            <h4><code>css</code></h4>
+            <h2 class="red">Nope</h2>
           </li>
         </ul>
       </section>
       <section>
-        <h3>We expect to run grunt every time a build runs</h3>
+        <h1>Read The Docs</h1>
         <hr>
-        <h4>we build starting with a clean workspace</h4>
+        <ul>
+          <li></li>
+          <li>
+            <h2>AMD</h2>
+            <h3><a href="https://github.com/amdjs/amdjs-api">https://github.com/amdjs/amdjs-api</a></h3>
+            <hr>
+          </li>
+          <li>
+            <h2>Require.js</h2>
+            <h3><a href="http://requirejs.org/" target="_blank">requirejs.org</a></h3>
+          </li>
+        </ul>
+      </section>
+      <section data-bespoke-state="main">
+        <h1>Can This Be Used In The Distro?</h1>
+        <hr>
+        <hr>
+        <h3>Well... It's Not Easy™</h3>
       </section>
       <section>
-        <h3>We have this "one-liner" as a Jenkins/Capistrano build step:</h3>
+        <h2>In Drupal There Is JavaScript All Over The Place</h2>
         <hr>
+        <h3>From various sources:</h3>
+        <h4>Core, Contrib, Custom</h4>
         <hr>
-        <hr><img src="images/oneliner.png" style="zoom:0.6">
+        <h3>In various forms:</h3>
+        <h4>File, Library, External file, Inline</h4>
       </section>
       <section>
-        <h2>If This Fails</h2>
-        <h2>It Should Fail The Build</h2>
+        <h2>Cannot Be Used For All JavaScript</h2>
+        <hr>
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h2><span class="shake shake-rotate shake-constant hover-stop">Drupalism</span> Strikes Again</h2>
+            <hr>
+            <hr>
+          </li>
+          <li>
+            <h2>But This Shouldn't Stop Us From Using It Where We Can</h2>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>Overview Of The Require.js Subsystem</h1>
+      </section>
+      <section>
+        <pre><code class="language-javascript">&lt;script src='jquery.js'&gt;&lt;/script&gt;
+&lt;script src='drupal.js'&gt;&lt;/script&gt;
+&lt;script src='require.js'&gt;&lt;/script&gt; // Require.js
+&lt;script src="http://www.googletagservices.com/tag/js/gpt.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  // Require.js code here
+&lt;/script&gt;
+
+&lt;script src='jwplayer.js'&gt;&lt;/script&gt;
+&lt;script src='other/contrib.js'&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  jQuery.extend(Drupal.settings, {"basePath":"\/"
+    ...
+&lt;/script&gt;
+</code></pre>
+      </section>
+      <section>
+        <h2>1. Configure AMD modules</h2>
+        <hr>
+        <h3>Drupal can have JS all over the place, so...</h3>
+        <pre><code class="language-javascript">requirejs.config({
+  paths: {
+    "dynamicgpt": "/path/to/dynamicgpt", // No .js at the end
+    "enquire": "/path/to/enquire",
+    "snap": "/path/to/snap"
+    ...
+  }
+});</code></pre>
+        <h4>Reference modules by name, not path</h4>
+      </section>
+      <section>
+        <h2>2. Define stub modules</h2>
+        <hr>
+        <h3>Fake these as modules since they are already loaded above in a script tag</h3>
+        <pre><code class="language-javascript">define("jquery", [], function() { return jQuery });
+define("jquery.once", [], function() { return jQuery.fn.once });
+define("drupal", [], function() { return Drupal });
+define("googletag", [], function() { return googletag });
+...</code></pre>
+        <h4>Now they can be listed as dependencies in an AMD module</h4>
+      </section>
+      <section>
+        <h3>Example stub usage</h3>
+        <hr>
+        <pre><code class="language-javascript">define(['jquery', 'enquire', 'drupal'], function($, enquire, Drupal) {
+  var settings = Drupal.settings;
+  
+  $('#target').click(function() {
+    // Access jQuery and Drupal like a boss...
+  });
+  
+});</code></pre>
+        <hr>
+        <h4>If it is listed as a dependency, require.js makes sure it will be loaded and ready for use.</h4>
+      </section>
+      <section>
+        <h2>3. Create a root wrapper</h2>
+        <hr>
+        <pre><code class="language-javascript">require(["drupal","has"], function(Drupal, has) {
+  var settings = Drupal.settings.dennisJs;
+  // More code inside
+});</code></pre>
+        <hr>
+        <h4>No need for <code>data-main</code> attribute, we can do it inline</h4>
+        <h4>The Drupal stub is required so settings are available</h4>
+        <h4>Has.js is a feature detection module (á la Modernizr)</h4>
+      </section>
+      <section>
+        <h2>4. Add some inner configuration</h2>
+        <hr>
+        <h4>To provide extra settings for selective loading<br>Loaded via the 'provision' Require.js plugin<sup>*</sup></h4>
+        <pre><code class="language-javascript">requirejs.config({
+  "provision": {
+    "enquire": { // Name of the module
+      "test": has.mq() &amp;&amp; has.mm() // Using has.js
+    }}});</code></pre>
+        <h4>Only load/execute if needed</h4>
+      </section>
+      <section>
+        <h3>More examples for tests</h3>
+        <hr>
+        <hr>
+        <pre><code class="language-javascript">requirejs.config({
+  "provision": {
+    "fbe": { "test": settings.useResponsive } // Using Drupal.settings
+    "savvior": { "test": settings.narrowStacked &amp;&amp; has.mm() }
+    "yourmodule": { "test": settings.whatever }
+  }
+});</code></pre>
+        <hr>
+        <hr>
+        <h4>This config will run the module only if tests are true</h4>
+      </section>
+      <section>
+        <h2>5. Call your SEP</h2>
+        <hr>
+        <h4>Single Entry Point is for site wide Javascript</h4>
+        <h4></h4>
+        <pre><code class="language-javascript">require(["main"], function(app) {
+  app.init();
+});
+</code></pre>
+      </section>
+      <section>
+        <h2>What's inside main.js?</h2>
+        <hr>
+        <h4>Directly or indirectly depends on the rest of the modules</h4>
+        <hr>
+        <pre class="small"><code class="language-javascript">- main.js
+  - dynamicgpt.js
+    - setup.js
+      - media-match.js
+    - enquire.js
+    - gpt.js // stub
+    - drupal.js // stub
+    ...
+  - theme.js
+    - fbe.js // Footer Block Expander
+      - enquire.js // already there
+      - jquery.js
+      - drupal.js
+    - appstylenav.js // App-style Navigation
+    ...
+    </code></pre>
+      </section>
+      <section>
+        <h1>Let's See This Again</h1>
+      </section>
+      <section>
+        <pre class="small"><code class="language-javascript">// Top-level config
+requirejs.config({
+  paths: {
+    "dynamicgpt": "/path/to/dynamicgpt", // No .js at the end
+    "enquire": "/path/to/enquire",
+    ...
+  }
+});
+// Stub modules
+define("jquery", [], function() { return jQuery });
+define("googletag", [], function() { return googletag });
+...
+// Root wrapper
+require(["drupal","has"], function(Drupal, has) {
+  var settings = Drupal.settings.dennisJs;
+  // Inner config
+  requirejs.config({
+    "provision": {
+      "fbe": { "test": settings.useResponsive } // Using Drupal.settings
+      "savvior": { "test": settings.narrowStacked &amp;&amp; has.mm() }
+      ...
+    }
+  });
+  // site wide SPE
+  require(["main"], function(app) {
+    app.init();
+  });
+  // Some other stuff on selected pages
+  require(["search"], function(search) {
+    search.init();
+  });
+});
+</code></pre>
+      </section>
+      <section data-bespoke-state="inverted">
+        <h1>How Am I Supposed To Produce Code Like That?</h1>
+        <hr><img src="images/wat.gif">
+      </section>
+      <section>
+        <h1>Meet dennis_js.module</h1>
+        <hr>
+        <h3>Drupal module in distro/modules/custom</h3>
+        <hr>
+        <h1>Meet skeleton_js.module</h1>
+        <hr>
+        <h3>Drupal module in site/modules/custom</h3>
+      </section>
+      <section>
+        <h2>Dennis JS adds an easy method to add modules</h2>
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h4><code>dennis_js_add_js($data, $options);</code></h4>
+            <hr>
+          </li>
+          <li>
+            <h4>Register a module</h4>
+          </li>
+          <li>
+            <h4>Add module to root wrapper</h4>
+          </li>
+          <li>
+            <h4>Add config</h4>
+          </li>
+          <li>
+            <h4>Add inner config</h4>
+          </li>
+          <li>
+            <h4>Add inline code</h4>
+          </li>
+          <li>
+            <h3>Contains a few utility modules (utils, has)</h3>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h2>Skeleton JS</h2>
+        <hr>
+        <h4>only adds main.js and allows per site customisations</h4>
+      </section>
+      <section data-bespoke-state="inverted">
+        <h1>There's more!</h1>
+        <hr><img src="images/interesting.jpg">
+        <hr>
+        <ul>
+          <li></li>
+          <li>
+            <h4>Optimisation</h4>
+            <p>Build a single compressed file out of all sitewide modules</p>
+          </li>
+          <li>
+            <h4>Best practice to code modular JS</h4>
+          </li>
+          <li>
+            <h4>How to organise modules</h4>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>Hands-on Workshop To Come</h1>
       </section>
       <section data-bespoke-state="main">
         <h1>Thank You</h1>
@@ -144,7 +537,7 @@ my_basic_project/
         <hr>
         <hr>
         <hr>
-        <h5><a href="http://attila.github.io/distro-requirejs-talk">attila.github.io/grunt-talk</a></h5>
+        <h5><a href="http://attila.github.io/distro-requirejs-talk">attila.github.io/distro-requirejs-talk</a></h5>
       </section>
     </article>
     <script src="scripts/scripts.js"></script>
